@@ -12,7 +12,7 @@ class Log(Cog):
 	@Cog.listener()
 	async def on_ready(self):
 		if not self.bot.ready:
-			self.log_channel = self.bot.get_channel(759432499221889034)
+			self.log_channel = self.bot.get_channel(789229853576527935)
 			self.bot.cogs_ready.ready_up("log")
 
 	@Cog.listener()
@@ -82,26 +82,11 @@ class Log(Cog):
 
 			await self.log_channel.send(embed=embed)
 
-	@Cog.listener()
-	async def on_message_edit(self, before, after):
-		if not after.author.bot:
-			if before.content != after.content:
-				embed = Embed(title="Message edit",
-							  description=f"Edit by {after.author.display_name}.",
-							  colour=after.author.colour,
-							  timestamp=datetime.utcnow())
-
-				fields = [("Before", before.content, False),
-						  ("After", after.content, False)]
-
-				for name, value, inline in fields:
-					embed.add_field(name=name, value=value, inline=inline)
-
-				await self.log_channel.send(embed=embed)
-
+	
 	@Cog.listener()
 	async def on_message_delete(self, message):
 		if not message.author.bot:
+                    if ",spam" in message:
 			embed = Embed(title="Message deletion",
 						  description=f"Action by {message.author.display_name}.",
 						  colour=message.author.colour,
