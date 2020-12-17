@@ -17,7 +17,7 @@ TOKEN = os.environ["TOKEN"]
 bot = discord.Client()
 bot = commands.Bot(command_prefix="?")
 # bot.remove_command('help')
-init_extension = ['cogs.mod']
+init_extension = ['cogs.mod', 'cogs.fun', 'cogs.log']
 if __name__ == '__main__':
     for extension in init_extension:
         try:
