@@ -10,11 +10,8 @@ import time
 class mod(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.config = Config('giveaways')
-        self._giveaway_task = bot.loop.create_task(self.giveaway_loop())
 
-    def cog_unload(self):
-        self._giveaway_task.cancel()
+
     @commands.command()
     @commands.has_permissions(ban_members=True, administrator=True)
     async def ban(self, ctx, member: discord.Member, *, reason=None):
@@ -49,7 +46,7 @@ class mod(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(administrator=True)
-    async def poll(self, ctx, *, question):
+    async def qp(self, ctx, *, question):
         await ctx.channel.purge(limit=1)
         em = discord.Embed(color=discord.Color.blue())
         em.set_author(name=ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
@@ -63,15 +60,14 @@ class mod(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def gw(self, ctx, mins: int, prize: str):
         em = discord.Embed()
-
-        end = datetime.datetime.utcnow() + datetime.timedelta(seconds=mins, hours=1)
+        end = datetime.datetime.utcnow() + datetime.timedelta(seconds=mins * 60)
         em.set_author(name=ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
         em.title = prize
         em.description = "React To Giveaway With 🎉 To Join."
         em.add_field(name='Giveaway end date', value=end, inline=False)
         msg = await ctx.send(embed=em)
         await msg.add_reaction('🎉')
-        time.sleep(mins*60)
+        time.sleep(mins - 60)
         nmsg = await ctx.channel.fetch_message(msg.id)
         users = nmsg.reaction[0].users().flatten()
         users.pop(users.index(bot.users))
